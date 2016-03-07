@@ -27,6 +27,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
+from sklearn.preprocessing import MinMaxScaler
 
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -34,8 +35,9 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.multiclass import OutputCodeClassifier
 
 pipeline = Pipeline([
-    ('classifier',  MLPClassifier(hidden_layer_sizes=100,alpha=0.01,activation='relu'))
+    ('classifier',  MLPClassifier(hidden_layer_sizes=100,alpha=0.01,activation='relu',max_iter=400))
 ])
+X = MinMaxScaler().fit_transform(X)
 
 
 # pipeline = Pipeline([
@@ -108,7 +110,7 @@ for train_indices, test_indices in k_fold:
 	pipeline.fit(train_ftrs, train_y)
 	predictions = pipeline.predict(test_ftrs)
 	
-	joblib.dump(pipeline, 'mutex_classifier_mlp_lev_cont' + str(i) + 'model.pkl', compress=9)
+	joblib.dump(pipeline, 'mutex_classifier_mlp_lev_cont_0.01_sgd_' + str(i) + 'model.pkl', compress=9)
 	print test_y, predictions
 	print 'fold ' + str(i)
 	print confusion_matrix(test_y, predictions,labels=[1,2,3,4,5,6,7,8,9])
