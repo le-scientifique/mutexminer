@@ -35,10 +35,10 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.multiclass import OutputCodeClassifier
 
 pipeline = Pipeline([
-    ('classifier',  MLPClassifier(hidden_layer_sizes=100,alpha=0.01,activation='relu',max_iter=400))
+    ('classifier',  MLPClassifier(hidden_layer_sizes=100,alpha=0.01,activation='relu',max_iter=300))
 ])
 X = MinMaxScaler().fit_transform(X)
-
+#best iter = 300, fold 4
 
 # pipeline = Pipeline([
 #     ('classifier',  tree.DecisionTreeClassifier())
