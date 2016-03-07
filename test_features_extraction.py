@@ -35,36 +35,36 @@ with open('test.csv') as ip:
 		row_features = row_features + get_uni_bi_basetype_vector(row[4])
 		row_features.append(int(row[5]))
 		row_features.append(int(row[6]))
-		# if row[8] != '':
-		# 	row_features.append(rescale(float(row[8]),0,1))
-		# else:
-		# 	row_features.append(0.03999067402)
+		if row[8] != '':
+			row_features.append(float(row[8]))
+		else:
+			row_features.append(0.04061)
 
-		# if row[9] != '':
-		# 	row_features.append(rescale(float(row[9]),0,1))
-		# else:
-		# 	row_features.append(0.04150059397)
+		if row[9] != '':
+			row_features.append(float(row[9]))
+		else:
+			row_features.append(0.04215)
 
 
-		# if row[10] != '':
-		# 	row_features.append(rescale(float(row[10]),0,1))
-		# else:
-		# 	row_features.append(0.03692720187)
+		if row[10] != '':
+			row_features.append(float(row[10]))
+		else:
+			row_features.append(0.037588)
 
-		# if row[11] != '':
-		# 	row_features.append(rescale(float(row[11]),0,1))
-		# else:
-		# 	row_features.append(0.04273295511)
+		if row[11] != '':
+			row_features.append(float(row[11]))
+		else:
+			row_features.append(0.04368)
 
 		#11
 		row_features += [other_source_labels_dict[x] for x in row[12:25]]
 		row_features.append(conservation_dict[row[26]])
 		row_features.append(conservation_dict[row[27]])
 		row_features.append(conservation_dict[row[28]])
-		# if row[29] != '':
-		# 	row_features.append(rescale(float(row[29]),0,1))
-		# else:
-		# 	row_features.append(0.0998810938)
+		if row[29] != '':
+			row_features.append(float(row[29]))
+		else:
+			row_features.append(0.095766)
 			
 		row_features.append(boolean_dict[row[30]])
 		row_features.append(boolean_dict[row[31]])

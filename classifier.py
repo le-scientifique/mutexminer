@@ -34,95 +34,115 @@ from sklearn.tree import DecisionTreeClassifier
 
 from sklearn.multiclass import OutputCodeClassifier
 
-pipeline = Pipeline([
-    ('classifier',  MLPClassifier(hidden_layer_sizes=100,alpha=0.01,activation='relu',max_iter=300))
-])
-X = MinMaxScaler().fit_transform(X)
-#best iter = 300, fold 4
+params = [
+          {'algorithm': 'adam','learning_rate_init': 0.1},
+          {'algorithm': 'adam','learning_rate_init': 0.01}
+          {'algorithm': 'adam','learning_rate_init': 0.0001}
+          {'algorithm': 'adam','beta1': 0.8}
+          {'algorithm': 'adam','beta1': 0.99}
+          {'algorithm': 'adam','beta2': 0.99}
+          {'algorithm': 'adam','beta2': 0.9999}
+          ]
+z = 0
+for param in params:
+	z = z + 1
+	# param = {'algorithm': 'sgd', 'learning_rate': 'constant', 'momentum': .9,
+	#            'nesterovs_momentum': False, 'learning_rate_init': 0.2}
 
-# pipeline = Pipeline([
-#     ('classifier',  tree.DecisionTreeClassifier())
-# ])
+	# pipeline = Pipeline([
+	#     ('classifier',  MLPClassifier(hidden_layer_sizes=100,alpha=0.01,activation='relu',max_iter=300))
+	# ])
 
-# pipeline = Pipeline([
-#     ('classifier',  RandomForestClassifier(n_estimators=10))
-# ])
+	pipeline = Pipeline([
+	    ('classifier',  MLPClassifier(verbose=0, random_state=0,max_iter=400,**param))
+	])
 
+	X = MinMaxScaler().fit_transform(X)
+	#best iter = 300, fold 4
 
+	# pipeline = Pipeline([
+	#     ('classifier',  tree.DecisionTreeClassifier())
+	# ])
 
-# pipeline = Pipeline([
-#     ('classifier',  GradientBoostingClassifier(n_estimators=100, learning_rate=1.0,max_depth=1, random_state=0))
-# ])
-
-# pipeline = Pipeline([
-#     ('classifier',  AdaBoostClassifier(
-#     DecisionTreeClassifier(max_depth=2),
-#     n_estimators=600,
-#     learning_rate=1.5,
-#     algorithm="SAMME"))
-# ])
-
-# pipeline = Pipeline([
-#     ('classifier',OutputCodeClassifier(LinearSVC(random_state=0),code_size=2, random_state=0))
-# ])
+	# pipeline = Pipeline([
+	#     ('classifier',  RandomForestClassifier(n_estimators=10))
+	# ])
 
 
-# pipeline = Pipeline([
-#     ('classifier', OneVsRestClassifier(LinearSVC(random_state=0)))
-# ])
 
-# pipeline = Pipeline([
-#     ('classifier', MultinomialNB())
-# ])
+	# pipeline = Pipeline([
+	#     ('classifier',  GradientBoostingClassifier(n_estimators=100, learning_rate=1.0,max_depth=1, random_state=0))
+	# ])
 
-# pipeline = Pipeline([
-#     ('classifier', GaussianNB())
-# ])
+	# pipeline = Pipeline([
+	#     ('classifier',  AdaBoostClassifier(
+	#     DecisionTreeClassifier(max_depth=2),
+	#     n_estimators=600,
+	#     learning_rate=1.5,
+	#     algorithm="SAMME"))
+	# ])
 
-from sklearn.cross_validation import KFold
-from sklearn.metrics import confusion_matrix, f1_score
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import Normalizer
-from sklearn.decomposition import TruncatedSVD
+	# pipeline = Pipeline([
+	#     ('classifier',OutputCodeClassifier(LinearSVC(random_state=0),code_size=2, random_state=0))
+	# ])
 
-# svd = TruncatedSVD(n_components=10)
-# normalizer = Normalizer(copy=False)
-# lsa = make_pipeline(svd, normalizer)
-# X = lsa.fit_transform(X)
 
-no_of_rows,_ = X.shape
+	# pipeline = Pipeline([
+	#     ('classifier', OneVsRestClassifier(LinearSVC(random_state=0)))
+	# ])
 
-k_fold = KFold(n=no_of_rows, n_folds=6)
-scores = []
-confusion = np.zeros((9,9),dtype=np.int)# numpy.array([[0, 0], [0, 0]])
-i = 0
-for train_indices, test_indices in k_fold:
-	i = i + 1
-	train_ftrs = X[train_indices]# X.iloc[train_indices]['text'].values
-	train_y = Y[train_indices]
-	# print train_ftrs.shape
-	# print train_y.shape
-	# train_y = train_data_frame.iloc[train_indices]['class'].values
+	# pipeline = Pipeline([
+	#     ('classifier', MultinomialNB())
+	# ])
 
-	test_ftrs = X[test_indices] 
-	test_y = Y[test_indices] 
+	# pipeline = Pipeline([
+	#     ('classifier', GaussianNB())
+	# ])
 
-	pipeline.fit(train_ftrs, train_y)
-	predictions = pipeline.predict(test_ftrs)
-	
-	joblib.dump(pipeline, 'mutex_classifier_mlp_lev_cont_0.01_sgd_' + str(i) + 'model.pkl', compress=9)
-	print test_y, predictions
-	print 'fold ' + str(i)
-	print confusion_matrix(test_y, predictions,labels=[1,2,3,4,5,6,7,8,9])
-	print "Precision: ", precision_score(test_y, predictions, average='micro')
-	print "Recall: ", recall_score(test_y, predictions, average='micro')
-	# # prin
-	# confusion += confusion_matrix(test_y, predictions,labels=[0,1,2,3,4,5,6,7,8,9])
-	# score = f1_score(test_y, predictions,labels=[0,1,2,3,4,5,6,7,8,9],pos_label=None, average='weighted')
-	# scores.append(score)
-	# i += 1
+	from sklearn.cross_validation import KFold
+	from sklearn.metrics import confusion_matrix, f1_score
+	from sklearn.pipeline import make_pipeline
+	from sklearn.preprocessing import Normalizer
+	from sklearn.decomposition import TruncatedSVD
 
-print('Confusion matrix:')
-print(confusion)
+	# svd = TruncatedSVD(n_components=10)
+	# normalizer = Normalizer(copy=False)
+	# lsa = make_pipeline(svd, normalizer)
+	# X = lsa.fit_transform(X)
 
-# mlp lev cont 
+	no_of_rows,_ = X.shape
+
+	k_fold = KFold(n=no_of_rows, n_folds=6)
+	scores = []
+	confusion = np.zeros((9,9),dtype=np.int)# numpy.array([[0, 0], [0, 0]])
+	i = 0
+	for train_indices, test_indices in k_fold:
+		i = i + 1
+		train_ftrs = X[train_indices]# X.iloc[train_indices]['text'].values
+		train_y = Y[train_indices]
+		# print train_ftrs.shape
+		# print train_y.shape
+		# train_y = train_data_frame.iloc[train_indices]['class'].values
+
+		test_ftrs = X[test_indices] 
+		test_y = Y[test_indices] 
+
+		pipeline.fit(train_ftrs, train_y)
+		predictions = pipeline.predict(test_ftrs)
+		
+		joblib.dump(pipeline, 'mutex_classifier_mlp_expt_' + str(z) + '_' + str(i) + 'model.pkl', compress=9)
+		print test_y, predictions
+		print 'fold ' + str(i)
+		print confusion_matrix(test_y, predictions,labels=[1,2,3,4,5,6,7,8,9])
+		print "Precision: ", precision_score(test_y, predictions, average='micro')
+		print "Recall: ", recall_score(test_y, predictions, average='micro')
+		# # prin
+		# confusion += confusion_matrix(test_y, predictions,labels=[0,1,2,3,4,5,6,7,8,9])
+		# score = f1_score(test_y, predictions,labels=[0,1,2,3,4,5,6,7,8,9],pos_label=None, average='weighted')
+		# scores.append(score)
+		# i += 1
+
+	print('Confusion matrix:')
+	print(confusion)
+
+	# mlp lev cont 
